@@ -1,0 +1,49 @@
+version: '3'
+services:
+#  webapp:
+#    build:
+#      context: .
+#      args:
+#        VERSION: 0.0.1-SNAPSHOT
+#    environment:
+#      PORT: 8081
+#      DB_HOST: postgres
+#      DB_PORT: 5432
+#      AUTH_HOST: keycloak
+#      DB_NAME: blog
+#      DB_USER: demo
+#      DB_PASSWORD: demo
+#    ports:
+#       - "8081:8081"
+
+#  keycloak:
+#    build:
+#      context: ./keycloak
+#    environment:
+#      KEYCLOAK_USER: demo
+#      KEYCLOAK_PASSWORD: demo
+#      PORT: 8082
+#      POSTGRES_USER: demo
+#      POSTGRES_PASSWORD: demo
+#      POSTGRES_ADDR: postgres
+#      POSTGRES_PORT_5432_TCP_ADDR: postgres
+#      POSTGRES_PORT_5432_TCP_PORT: 5432
+#      POSTGRES_PORT: 5432
+#      POSTGRES_DATABASE: blog
+#    ports:
+#      - "8082:8082"
+#    links:
+#      - postgres
+#    depends_on:
+#      - postgres
+
+  postgres:
+    build:
+      context: ../blog-back/postgres
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/ilyin/personal/blog_pg:/var/lib/postgresql/data
