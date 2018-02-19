@@ -1,0 +1,7 @@
+type Configuration {
+    name: String!
+}
+
+extend type Query {
+    configuration: Configuration!
+}

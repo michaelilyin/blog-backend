@@ -1,0 +1,12 @@
+type User {
+    id: ID!
+    login: String!
+    email: String!
+    firstName: String!
+    lastName: String!
+}
+
+extend type Query {
+    users(search: String): [User!]
+    user(id: ID): User!
+}

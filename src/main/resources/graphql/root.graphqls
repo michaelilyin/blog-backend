@@ -1,0 +1,8 @@
+type Query {
+    version: String!
+    buildTime: String!
+}
+
+schema {
+    query: Query
+}
