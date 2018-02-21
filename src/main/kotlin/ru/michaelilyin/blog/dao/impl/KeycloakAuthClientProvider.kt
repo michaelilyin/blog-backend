@@ -13,24 +13,23 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
+import ru.michaelilyin.blog.dao.AuthClientRepository
 import ru.michaelilyin.blog.dao.UserRepository
+import ru.michaelilyin.blog.model.KeycloakClient
 import ru.michaelilyin.blog.model.KeycloakUser
 
 @Repository
-class KeycloakUserProvider @Autowired() constructor(
+class KeycloakAuthClientProvider @Autowired() constructor(
         @Value("\${kk.api.realm}") private val realm: String,
         private val template: KeycloakRestTemplate
-) : UserRepository {
+) : AuthClientRepository {
 
     companion object : KLogging()
 
-    override fun getUsers(search: String?): List<KeycloakUser> {
-        val uri = URIBuilder("${realm}/users")
-        if (search != null) {
-            uri.addParameter("search", search)
-        }
+    override fun getClients(): List<KeycloakClient> {
+        val uri = URIBuilder("${realm}/clients")
 
-        val users = this.template.getForEntity(uri.build(), Array<KeycloakUser>::class.java)
+        val users = this.template.getForEntity(uri.build(), Array<KeycloakClient>::class.java)
         val body = users.body
         if (body != null) {
             return body.asList()

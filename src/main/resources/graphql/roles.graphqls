@@ -1,0 +1,9 @@
+type Role {
+    id: ID!
+    name: String!
+    description: String
+}
+
+extend type Query {
+    roles(search: String): [Role!]
+}

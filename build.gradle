@@ -60,6 +60,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-websocket')
+//	compile('org.springframework.security.oauth:spring-security-oauth2')
     compile('com.fasterxml.jackson.module:jackson-module-kotlin')
     compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     compile("org.jetbrains.kotlin:kotlin-reflect")
@@ -71,7 +72,7 @@ dependencies {
     compile('io.github.microutils:kotlin-logging:1.4.9')
 
     compile('org.keycloak:keycloak-spring-boot-2-starter:4.0.0.CR1-SNAPSHOT')
-    compile('org.keycloak:keycloak-adapter:4.0.0.CR1-SNAPSHOT')
+//    compile('org.keycloak:keycloak-adapter:4.0.0.CR1-SNAPSHOT')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')

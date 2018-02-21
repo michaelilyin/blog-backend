@@ -1,5 +1,6 @@
 package ru.michaelilyin.blog.config
 
+import mu.KLogging
 import org.keycloak.adapters.springsecurity.KeycloakSecurityComponents
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter
 import org.springframework.context.annotation.Bean
@@ -16,41 +17,61 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authorization.AuthorityReactiveAuthorizationManager.hasRole
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-
-
-
+import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate
+import org.springframework.beans.factory.config.ConfigurableBeanFactory
+import org.springframework.context.annotation.Scope
+import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory
+import javax.annotation.PostConstruct
 
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackageClasses = arrayOf(KeycloakSecurityComponents::class))
+@ComponentScan(basePackageClasses = [KeycloakSecurityComponents::class])
 class SecurityConfig : KeycloakWebSecurityConfigurerAdapter() {
+
+    companion object : KLogging()
+
+    init {
+        logger.info { "Security configuration created" }
+    }
+
+    @Autowired
+    private lateinit var keycloakClientRequestFactory: KeycloakClientRequestFactory;
 
     @Autowired
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
         val keycloakAuthenticationProvider = keycloakAuthenticationProvider()
-        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(
-                SimpleAuthorityMapper())
+        keycloakAuthenticationProvider.setGrantedAuthoritiesMapper(SimpleAuthorityMapper())
         auth.authenticationProvider(keycloakAuthenticationProvider)
+        logger.info { "Authentication configured globally" }
     }
 
     @Bean
-    fun KeycloakConfigResolver(): KeycloakSpringBootConfigResolver {
+    fun keycloakConfigResolver(): KeycloakSpringBootConfigResolver {
+        logger.info { "Resolver created" }
         return KeycloakSpringBootConfigResolver()
     }
 
     @Bean
     override fun sessionAuthenticationStrategy(): SessionAuthenticationStrategy {
+        logger.info { "Session strategy initialized" }
         return RegisterSessionAuthenticationStrategy(SessionRegistryImpl());
     }
 
-    @Throws(Exception::class)
+    @Bean
+    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    fun keycloakRestTemplate(): KeycloakRestTemplate {
+        logger.info { "Rest template produced" }
+        return KeycloakRestTemplate(keycloakClientRequestFactory)
+    }
+
     override fun configure(http: HttpSecurity) {
         super.configure(http)
-        http.authorizeRequests()
-                .antMatchers("/customers*")
-                .hasRole("user")
-                .anyRequest()
-                .permitAll()
+        http
+                .authorizeRequests()
+                .anyRequest().fullyAuthenticated()
+                .and()
+                .csrf().ignoringAntMatchers("/graphql")
+        logger.info { "Constraints specified" }
     }
 }
