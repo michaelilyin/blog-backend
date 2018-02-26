@@ -2,6 +2,7 @@ package ru.michaelilyin.blog.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import ru.michaelilyin.blog.annotations.audit.Audit
 import ru.michaelilyin.blog.dao.UserRepository
 import ru.michaelilyin.blog.dto.UserDTO
 import ru.michaelilyin.blog.service.UserService
@@ -10,6 +11,8 @@ import ru.michaelilyin.blog.service.UserService
 class UserServiceImpl @Autowired() constructor(
         private val userRepository: UserRepository
 ) : UserService {
+
+    @Audit
     override fun getUsers(search: String?): List<UserDTO> {
         return userRepository.getUsers(search).map {
             UserDTO(

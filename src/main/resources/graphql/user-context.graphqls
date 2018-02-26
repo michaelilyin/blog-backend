@@ -1,0 +1,7 @@
+type UserContext {
+    username: String!
+}
+
+extend type Query {
+    userContext: UserContext
+}

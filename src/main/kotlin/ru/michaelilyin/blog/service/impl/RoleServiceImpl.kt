@@ -2,6 +2,7 @@ package ru.michaelilyin.blog.service.impl
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import ru.michaelilyin.blog.annotations.audit.Audit
 import ru.michaelilyin.blog.dao.AuthClientRepository
 import ru.michaelilyin.blog.dao.RoleRepository
 import ru.michaelilyin.blog.dao.UserRepository
@@ -16,6 +17,8 @@ class RoleServiceImpl @Autowired() constructor(
         private val roleRepository: RoleRepository,
         private val authClientRepository: AuthClientRepository
 ) : RoleService {
+
+    @Audit
     override fun getRoles(search: String?): List<RoleDTO> {
         val rootRoles = roleRepository.getRoles()
         val allRoles = mutableListOf<KeycloakRole>()

@@ -21,12 +21,14 @@ import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate
 import org.springframework.beans.factory.config.ConfigurableBeanFactory
 import org.springframework.context.annotation.Scope
 import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import javax.annotation.PostConstruct
 
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackageClasses = [KeycloakSecurityComponents::class])
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@ComponentScan(basePackageClasses = arrayOf(KeycloakSecurityComponents::class))
 class SecurityConfig : KeycloakWebSecurityConfigurerAdapter() {
 
     companion object : KLogging()
@@ -67,11 +69,16 @@ class SecurityConfig : KeycloakWebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
         super.configure(http)
+        logger.info { "Constraints specified" }
         http
                 .authorizeRequests()
-                .anyRequest().fullyAuthenticated()
+                .anyRequest().permitAll()
                 .and()
                 .csrf().ignoringAntMatchers("/graphql")
-        logger.info { "Constraints specified" }
+                .and()
+                .logout()
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .addLogoutHandler(keycloakLogoutHandler())
     }
 }
