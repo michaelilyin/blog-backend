@@ -1,9 +1,10 @@
 type Role {
     id: ID!
     name: String!
+    client: String!
     description: String
 }
 
 extend type Query {
-    roles(search: String): [Role!]
+    roles(search: String): [Role!]!
 }

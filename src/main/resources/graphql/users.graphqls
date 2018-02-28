@@ -7,6 +7,6 @@ type User {
 }
 
 extend type Query {
-    users(search: String): [User!]
+    users(search: String): [User!]!
     user(id: ID): User!
 }

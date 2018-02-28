@@ -1,0 +1,8 @@
+type Audit {
+    id: String!
+    message: String!
+}
+
+extend type Query {
+    audit: [Audit!]!
+}

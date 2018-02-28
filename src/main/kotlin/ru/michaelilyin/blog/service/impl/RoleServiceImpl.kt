@@ -21,16 +21,28 @@ class RoleServiceImpl @Autowired() constructor(
     @Audit
     override fun getRoles(search: String?): List<RoleDTO> {
         val rootRoles = roleRepository.getRoles()
-        val allRoles = mutableListOf<KeycloakRole>()
-        allRoles.addAll(rootRoles)
+        val allRoles = mutableListOf<RoleDTO>()
+        allRoles.addAll(rootRoles.asSequence().map { RoleDTO(
+                it.id,
+                it.name,
+                "realm",
+                it.description
+        ) })
 
         val clients = authClientRepository.getClients()
-        clients.forEach {
-            val clientRoles = roleRepository.getRoles(it.id)
-            allRoles.addAll(clientRoles)
+        clients.forEach {client ->
+            val clientRoles = roleRepository.getRoles(client.id)
+            allRoles.addAll(clientRoles.asSequence().map {
+                RoleDTO(
+                        it.id,
+                        it.name,
+                        client.id,
+                        it.description
+                )
+            })
         }
 
-        return allRoles.asSequence()
+        return allRoles
                 .filter {
                     if (search == null) {
                         true
@@ -39,13 +51,5 @@ class RoleServiceImpl @Autowired() constructor(
                                 || it.description?.contains(search, true) ?: false
                     }
                 }
-                .map {
-                    RoleDTO(
-                            it.id,
-                            it.name,
-                            it.description
-                    )
-                }
-                .toList()
     }
 }

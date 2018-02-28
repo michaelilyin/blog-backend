@@ -38,7 +38,7 @@ class SecurityConfig : KeycloakWebSecurityConfigurerAdapter() {
     }
 
     @Autowired
-    private lateinit var keycloakClientRequestFactory: KeycloakClientRequestFactory;
+    private lateinit var keycloakClientRequestFactory: KeycloakClientRequestFactory
 
     @Autowired
     fun configureGlobal(auth: AuthenticationManagerBuilder) {
@@ -57,7 +57,7 @@ class SecurityConfig : KeycloakWebSecurityConfigurerAdapter() {
     @Bean
     override fun sessionAuthenticationStrategy(): SessionAuthenticationStrategy {
         logger.info { "Session strategy initialized" }
-        return RegisterSessionAuthenticationStrategy(SessionRegistryImpl());
+        return RegisterSessionAuthenticationStrategy(SessionRegistryImpl())
     }
 
     @Bean
@@ -77,8 +77,11 @@ class SecurityConfig : KeycloakWebSecurityConfigurerAdapter() {
                 .csrf().ignoringAntMatchers("/graphql")
                 .and()
                 .logout()
-                .clearAuthentication(true)
-                .invalidateHttpSession(true)
                 .addLogoutHandler(keycloakLogoutHandler())
+                .logoutUrl("/sso/logout").permitAll()
+                .logoutSuccessUrl("/")
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+                .invalidateHttpSession(true)
     }
 }

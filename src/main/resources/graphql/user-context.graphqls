@@ -1,5 +1,7 @@
 type UserContext {
     username: String!
+    roles: [String!]!,
+    authorities: [String!]!
 }
 
 extend type Query {
