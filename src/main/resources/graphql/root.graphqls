@@ -1,3 +1,5 @@
+scalar DateTime
+
 type Query {
     version: String!
     buildTime: String!

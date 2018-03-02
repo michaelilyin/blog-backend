@@ -6,6 +6,7 @@ import org.keycloak.adapters.springsecurity.client.KeycloakClientRequestFactory
 import org.keycloak.adapters.springsecurity.client.KeycloakRestTemplate
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Lazy
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
@@ -19,7 +20,7 @@ import ru.michaelilyin.blog.model.KeycloakUser
 @Repository
 class KeycloakUserProvider @Autowired() constructor(
         @Value("\${kk.api.realm}") private val realm: String,
-        private val template: KeycloakRestTemplate
+        @Lazy() private val template: KeycloakRestTemplate
 ) : UserRepository {
 
     companion object : KLogging()

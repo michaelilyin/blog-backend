@@ -1,8 +1,25 @@
+type TraceElement {
+    clazz: String!
+    method: String!
+    file: String
+    line: Int
+}
+
+enum Severity {
+    INFO, DEBUG, ERROR
+}
+
 type Audit {
     id: String!
+    tag: String!
+    thread: String!
+    time: DateTime!
+    severity: Severity!
+    login: String!
     message: String!
+    trace: [TraceElement!]
 }
 
 extend type Query {
-    audit: [Audit!]!
+    audit(offset: Int, limit: Int): [Audit!]!
 }

@@ -8,6 +8,7 @@ enum class EventType {
 @Retention(AnnotationRetention.RUNTIME)
 @Repeatable
 annotation class NotifyChanges(
-        val tag: String,
-        val event: EventType
+        val tag: String = "common",
+        val event: EventType = EventType.CHANGE,
+        val payload: Array<String> = ["#result"]
 )
