@@ -3,6 +3,7 @@ package ru.michaelilyin.blog.service.impl
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.set
+import org.springframework.security.access.annotation.Secured
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 import ru.michaelilyin.blog.annotations.audit.Audit
@@ -63,8 +64,7 @@ class AuditServiceImpl @Autowired() constructor(
         return mapper.writeValueAsString(list)
     }
 
-    @Audit(AuditLevel.DEBUG)
-    @PreAuthorize("""hasRole("audit-read")""")
+    @Secured("ROLE_audit_read")
     override fun getAuditRecords(offset: Long, limit: Long): List<AuditRecordDTO> {
         val records = auditRepository.getAuditRecords(offset, limit)
         return records.map {

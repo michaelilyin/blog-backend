@@ -10,5 +10,5 @@ enum class EventType {
 annotation class NotifyChanges(
         val tag: String = "common",
         val event: EventType = EventType.CHANGE,
-        val payload: Array<String> = ["#result"]
+        val payload: Array<String> = arrayOf("#result")
 )

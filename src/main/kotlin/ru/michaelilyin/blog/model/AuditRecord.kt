@@ -16,18 +16,3 @@ data class AuditRecord(
         var message: String,
         var trace: String?
 )
-
-object AuditRecordMapper: RowMapper<AuditRecord> {
-    override fun mapRow(rs: ResultSet, rowNum: Int): AuditRecord? {
-        return AuditRecord(
-                id = rs.getLong("id"),
-                tag = rs.getString("tag"),
-                thread = rs.getString("thread"),
-                time = LocalDateTime.from(rs.getDate("time").toInstant()),
-                severity = AuditLevel.valueOf(rs.getString("severity")),
-                login = rs.getString("login"),
-                message = rs.getString("message"),
-                trace = rs.getString("trace")
-        )
-    }
-}

@@ -12,8 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder
 import org.springframework.stereotype.Repository
 import ru.michaelilyin.blog.dao.AuditRepository
 import ru.michaelilyin.blog.model.AuditRecord
-import ru.michaelilyin.blog.model.AuditRecordMapper
-import java.sql.Types
+import ru.michaelilyin.blog.model.mapper.AuditRecordJdbcMapper
 
 @Repository
 class JdbcAuditRepository @Autowired() constructor(
@@ -44,8 +43,7 @@ LIMIT :limit"""
         params["severity"] = record.severity.name
         params["login"] = record.login
         params["message"] = record.message
-        val trace = record.trace
-        params["trace"] = trace
+        params["trace"] = record.trace
 
         val keyHolder = GeneratedKeyHolder()
         namedJdbcTemplate.update(CREATE_AUDIT, MapSqlParameterSource(params), keyHolder, arrayOf("id"))
@@ -59,6 +57,6 @@ LIMIT :limit"""
         params["offset"] = offset
         params["limit"] = limit
 
-        return namedJdbcTemplate.query(GET_AUDIT_PAGE, params, AuditRecordMapper)
+        return namedJdbcTemplate.query(GET_AUDIT_PAGE, params, AuditRecordJdbcMapper)
     }
 }
