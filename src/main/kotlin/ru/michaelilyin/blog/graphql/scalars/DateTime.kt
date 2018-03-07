@@ -44,8 +44,10 @@ class GraphQLLocalDateTime : GraphQLScalarType(
                 throw CoercingParseValueException("Invalid value '$input' for LocalDateTime")
             }
         }) {
+
     companion object: KLogging() {
-        val utc = ZoneId.of("UTC")
-        val default = ZoneId.systemDefault()
+        val utc = ZoneId.of("UTC")!!
+        val default = ZoneId.systemDefault()!!
     }
+
 }
