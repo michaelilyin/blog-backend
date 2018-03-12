@@ -65,7 +65,7 @@ class GraphQLConfig {
                     .filter { it != null }
                     .map { it as GraphQLError }
                     .toMutableList()
-            if (errors.size == 0) {
+            if (processed.size == 0) {
                 return super.processErrors(errors)
             } else {
                 return processed

@@ -1,19 +1,20 @@
 package ru.michaelilyin.blog.service.impl
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.jdbc.core.namedparam.set
 import org.springframework.security.access.annotation.Secured
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
-import ru.michaelilyin.blog.annotations.audit.Audit
 import ru.michaelilyin.blog.annotations.audit.AuditLevel
 import ru.michaelilyin.blog.annotations.notification.EventType
 import ru.michaelilyin.blog.annotations.notification.NotifyChanges
 import ru.michaelilyin.blog.dao.AuditRepository
 import ru.michaelilyin.blog.dao.AuditSettingsRepository
 import ru.michaelilyin.blog.dto.AuditRecordDTO
+import ru.michaelilyin.blog.dto.TraceContainerDTO
 import ru.michaelilyin.blog.dto.TraceElementDTO
+import ru.michaelilyin.blog.dto.TraceState
+import ru.michaelilyin.blog.dto.mapper.AuditRecordDTOMapper
 import ru.michaelilyin.blog.model.AuditRecord
 import ru.michaelilyin.blog.model.AuditSetting
 import ru.michaelilyin.blog.service.AuditService
@@ -28,16 +29,34 @@ class AuditServiceImpl @Autowired() constructor(
         private val auditSettingsRepository: AuditSettingsRepository
 ) : AuditService {
 
+    companion object : KLogging()
+
     @NotifyChanges(tag = "audit", event = EventType.CREATION)
     override fun createAuditRecord(tag: String, severity: AuditLevel, message: String, throwable: Throwable?): AuditRecordDTO? {
         val name = authenticationFacade.getUserLogin() ?: "Anonymous"
 
         val setting = auditSettingsRepository.getSettingsFor(tag, name)
+        logger.debug { "Process audit creation with args ($tag, $severity) and settings $setting" }
+
         val settingSeverity = setting.severity?.level ?: AuditLevel.INFO.level
         if (settingSeverity < severity.level) {
             return null
         }
 
+        val result = createAuditRecordInternal(name, tag, severity, message, throwable, setting)
+        return AuditRecordDTOMapper.toDTO(result, mapper)
+    }
+
+//    @Secured("ROLE_audit-read")
+    override fun getAuditRecords(offset: Long, limit: Long): List<AuditRecordDTO> {
+        val records = auditRepository.getAuditRecords(offset, limit)
+        return records.map {
+            AuditRecordDTOMapper.toDTO(it, mapper)
+        }
+    }
+
+    private fun createAuditRecordInternal(username: String, tag: String, severity: AuditLevel, message: String,
+                                          throwable: Throwable?, setting: AuditSetting): AuditRecord {
         val thread = Thread.currentThread()
         val threadName = thread.name
 
@@ -50,37 +69,58 @@ class AuditServiceImpl @Autowired() constructor(
                 thread = threadName,
                 time = LocalDateTime.now(),
                 severity = severity,
-                login = name,
+                login = username,
                 message = message,
                 trace = trace
         )
         val result = auditRepository.createAuditRecord(record)
-        return AuditRecordDTO(result, mapper)
+        return result
     }
 
     private fun constructTraceString(throwable: Throwable?): String? {
+        val containers = mutableListOf<TraceContainerDTO>()
         if (throwable == null) {
-            return null
-        }
-        val list = mutableListOf<TraceElementDTO>()
-        val trace = throwable.stackTrace
-        list.addAll(trace.map {
-            TraceElementDTO(
-                    clazz = it.className,
-                    file = it.fileName,
-                    method = it.methodName,
-                    line = it.lineNumber
+            val thread = Thread.currentThread()
+            val trace = thread.stackTrace
+            val elements = convertTrace(trace)
+            val container = TraceContainerDTO(
+                    state = TraceState.NORMAL,
+                    message = "No message",
+                    reporter = "Audit",
+                    trace = elements
             )
-        })
-        //TODO: write all exceptions
-        return mapper.writeValueAsString(list)
+            containers.add(container)
+        } else {
+            constructExceptionTraceContainer(throwable, containers)
+        }
+        return mapper.writeValueAsString(containers)
     }
 
-    @Secured("ROLE_audit_read")
-    override fun getAuditRecords(offset: Long, limit: Long): List<AuditRecordDTO> {
-        val records = auditRepository.getAuditRecords(offset, limit)
-        return records.map {
-            AuditRecordDTO(it, mapper)
+    private fun constructExceptionTraceContainer(throwable: Throwable, containers: MutableList<TraceContainerDTO>) {
+        var ex: Throwable? = throwable
+        while (ex != null) {
+            val trace = ex.stackTrace
+            val elements = convertTrace(trace)
+            val container = TraceContainerDTO(
+                    state = TraceState.ERROR,
+                    message = ex.message ?: "No message",
+                    reporter = ex.javaClass.canonicalName,
+                    trace = elements
+            )
+            containers.add(container)
+            ex = ex.cause
         }
+    }
+
+    private fun convertTrace(trace: Array<out StackTraceElement>): List<TraceElementDTO> {
+        return trace
+                .map {
+                    TraceElementDTO(
+                            clazz = it.className,
+                            file = it.fileName,
+                            method = it.methodName,
+                            line = it.lineNumber
+                    )
+                }
     }
 }

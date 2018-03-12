@@ -1,8 +1,19 @@
+enum TraceState {
+    NORMAL, ERROR
+}
+
 type TraceElement {
     clazz: String!
     method: String!
     file: String
     line: Int
+}
+
+type TraceContainer {
+    state: TraceState!
+    message: String!
+    reporter: String!
+    trace: [TraceElement!]!
 }
 
 enum Severity {
@@ -17,7 +28,7 @@ type Audit {
     severity: Severity!
     login: String!
     message: String!
-    trace: [TraceElement!]
+    trace: [TraceContainer!]
 }
 
 extend type Query {

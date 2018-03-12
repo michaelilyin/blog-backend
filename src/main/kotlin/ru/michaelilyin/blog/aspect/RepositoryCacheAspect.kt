@@ -9,20 +9,20 @@ import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Pointcut
+import org.aspectj.lang.reflect.MethodSignature
 import org.springframework.stereotype.Component
+import java.lang.reflect.Method
+import java.util.*
 
 @Aspect
 @Component
 class RepositoryCacheAspect {
     companion object : KLogging()
 
-    private val repositories = mutableMapOf<Class<*>, MutableMap<Array<Any>, Any>>()
+    private val repositories = mutableMapOf<Class<*>, MutableMap<Method, MutableMap<Number, Any>>>()
 
-    @Pointcut("within(@ru.michaelilyin.blog.annotations.cache.repository.CacheableRepository)")
+    @Pointcut("within(@ru.michaelilyin.blog.annotations.cache.repository.CacheableRepository *)")
     fun cacheableBeanPointcut() {}
-
-    @Pointcut("within(@ru.michaelilyin.blog.annotations.cache.repository.InvalidateCache)")
-    fun invalidateCachePointcut() {}
 
     @Pointcut("execution(public * *.get*(..))")
     fun publicGetMethod() {}
@@ -30,27 +30,37 @@ class RepositoryCacheAspect {
     @Pointcut("cacheableBeanPointcut() && publicGetMethod()")
     fun cacheableGetPointcut() {}
 
-    @Pointcut("execution(public * *.create*(..)) || execution(public * *.udpate*(..)) || execution(public * *.delete*(..))")
-    fun publicModifyMethod() {}
-
-    @Pointcut("invalidateCachePointcut() && publicModifyMethod()")
+    @Pointcut("@annotation(ru.michaelilyin.blog.annotations.cache.repository.InvalidateCache) && execution(public * *(..))")
     fun publicInvalidatePointcut() {}
 
     @Around("cacheableGetPointcut()")
     fun around(jp: ProceedingJoinPoint): Any? {
-        val type = jp.signature.declaringType
+        val signature = jp.signature as MethodSignature
+        val type = signature.declaringType
+        val method = signature.method
+
+        logger.trace { "Invoking cacheable call for ${type.simpleName}.${method.name}" }
         val repo = repositories.computeIfAbsent(type, { mutableMapOf() })
-        if (repo.containsKey(jp.args)) {
-            return repo[jp.args]
+        val meth = repo.computeIfAbsent(method, { mutableMapOf() })
+
+        val hash = Arrays.hashCode(jp.args)
+
+        if (meth.containsKey(hash)) {
+            val res = meth[hash]
+            logger.trace { "Return cached value is $res" }
+            return res
         }
         val res = jp.proceed()
-        repo[jp.args] = res
+
+        logger.trace { "Save new value to cache and return after proceed $res" }
+        meth[hash] = res
         return res
     }
 
     @After("publicInvalidatePointcut()")
     fun afterModification(jp: JoinPoint) {
         val type = jp.signature.declaringType
+        logger.trace { "Reset cache for ${type.simpleName}" }
         repositories.remove(type)
     }
 }

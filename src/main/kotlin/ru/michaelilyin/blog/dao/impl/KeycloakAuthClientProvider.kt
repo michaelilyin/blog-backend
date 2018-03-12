@@ -14,12 +14,13 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
+import ru.michaelilyin.blog.annotations.cache.repository.CacheableRepository
 import ru.michaelilyin.blog.dao.AuthClientRepository
 import ru.michaelilyin.blog.dao.UserRepository
 import ru.michaelilyin.blog.model.KeycloakClient
 import ru.michaelilyin.blog.model.KeycloakUser
 
-@Repository
+@CacheableRepository
 class KeycloakAuthClientProvider @Autowired() constructor(
         @Value("\${kk.api.realm}") private val realm: String,
         @Lazy() private val template: KeycloakRestTemplate

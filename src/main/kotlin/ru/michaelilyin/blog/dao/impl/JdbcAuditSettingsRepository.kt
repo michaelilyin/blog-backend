@@ -12,21 +12,29 @@ import ru.michaelilyin.blog.model.mapper.AuditRecordJdbcMapper
 import ru.michaelilyin.blog.model.mapper.AuditSettingJdbcMapper
 
 @CacheableRepository
-@Repository
 class JdbcAuditSettingsRepository @Autowired() constructor(
         private val namedJdbcTemplate: NamedParameterJdbcTemplate
 ) : AuditSettingsRepository {
 
     // language=PostgreSQL
-    private val SETTINGS_RQUEST = """SELECT
-  -1 as id,
-  :tag as tag,
-  :login as login,
-  coalesce(severity, 'INFO') as severity,
-  coalesce(bool_or(trace), false) as trace
-FROM bl_audit_settings
+    private val SETTINGS_RQUEST = """WITH sev AS (
+    SELECT severity
+    FROM bl_audit_settings
+    WHERE (login IS NULL OR login = :login)
+          OR (tag IS NULL OR tag = :tag)
+    ORDER BY tag NULLS LAST, login NULLS LAST
+    LIMIT 1
+)
+SELECT
+  -1                              AS id,
+  :tag                            AS tag,
+  :login                          AS login,
+  coalesce(sev.severity, 'INFO')  AS severity,
+  coalesce(bool_or(trace), FALSE) AS trace
+FROM bl_audit_settings, sev
 WHERE (login IS NULL OR login = :login)
-      OR (tag is NULL OR tag = :tag)
+      OR (tag IS NULL OR tag = :tag)
+GROUP BY sev.severity
 ORDER BY tag NULLS FIRST, login NULLS FIRST
 """
 

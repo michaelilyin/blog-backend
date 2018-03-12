@@ -6,4 +6,5 @@ import ru.michaelilyin.blog.dto.UserDTO
 
 interface RoleService {
     fun getRoles(search: String?): List<RoleDTO>
+    fun getRolesOfUser(id: String): List<RoleDTO>
 }

@@ -6,13 +6,23 @@ import ru.michaelilyin.blog.annotations.audit.AuditLevel
 import ru.michaelilyin.blog.model.AuditRecord
 import java.time.LocalDateTime
 
+enum class TraceState {
+    NORMAL, ERROR
+}
+
+data class TraceContainerDTO(
+        val state: TraceState,
+        val reporter: String,
+        val message: String,
+        val trace: List<TraceElementDTO>
+)
+
 data class TraceElementDTO(
         val clazz: String,
         val method: String,
         val file: String?,
         val line: Int
-) {
-}
+)
 
 data class AuditRecordDTO(
         val id: String,
@@ -22,27 +32,5 @@ data class AuditRecordDTO(
         val severity: AuditLevel,
         val login: String,
         val message: String,
-        val trace: List<TraceElementDTO>?
-) {
-
-    companion object {
-        private fun parseTrace(trace: String?, mapper: ObjectMapper): List<TraceElementDTO>? {
-            if (trace == null) {
-                return null
-            }
-            return mapper.readValue(trace, object : TypeReference<List<TraceElementDTO>>() {})
-        }
-    }
-
-    constructor(model: AuditRecord, mapper: ObjectMapper) : this(
-            id = model.id.toString(),
-            tag = model.tag,
-            thread = model.thread,
-            time = model.time,
-            severity = model.severity,
-            login = model.login,
-            message = model.message,
-            trace = parseTrace(model.trace, mapper)
-    )
-
-}
+        val trace: List<TraceContainerDTO>?
+)

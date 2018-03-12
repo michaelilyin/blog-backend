@@ -32,14 +32,15 @@ class AuditAspect @Autowired() constructor(
         }
     }
 
-    @Pointcut("@annotation(ru.michaelilyin.blog.annotations.audit.Audit) && execution(* *(..)) && @annotation(audit)")
+    @Pointcut("@annotation(ru.michaelilyin.blog.annotations.audit.Audit) && execution(* *(..))")
     fun annotationPointcut() {}
 
     @Around("annotationPointcut()")
-    fun around(jp: ProceedingJoinPoint, audit: Audit): Any? {
+    fun around(jp: ProceedingJoinPoint): Any? {
         val signature = jp.signature as MethodSignature
         val method = signature.method
         val type = signature.declaringType
+        val audit = method.getAnnotation(Audit::class.java)
         val level = audit.level
         val typeLogger = getLogger(type)
         val tag = "${signature.declaringType.simpleName}.${method.name}"

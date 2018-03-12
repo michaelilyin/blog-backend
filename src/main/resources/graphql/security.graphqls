@@ -1,0 +1,30 @@
+type Permission {
+    id: ID!
+    name: String!
+    description: String
+}
+
+type Role {
+    id: ID!
+    name: String!
+    description: String
+    permissions: [Permission!]!
+}
+
+type Group {
+    id: ID!
+    name: String!
+    description: String
+    roles: [Role!]!
+}
+
+extend type Query {
+    roles(search: String): [Role!]!
+    permissions(search: String): [Permission!]!
+    groups(search: String): [Group!]!
+}
+
+extend type User {
+    roles: [Role!]!
+    groups: [Group!]!
+}
