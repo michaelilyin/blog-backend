@@ -3,12 +3,10 @@ package ru.michaelilyin.blog.dao.impl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
-import org.springframework.stereotype.Repository
 import ru.michaelilyin.blog.annotations.cache.repository.CacheableRepository
 import ru.michaelilyin.blog.annotations.cache.repository.InvalidateCache
 import ru.michaelilyin.blog.dao.AuditSettingsRepository
 import ru.michaelilyin.blog.model.AuditSetting
-import ru.michaelilyin.blog.model.mapper.AuditRecordJdbcMapper
 import ru.michaelilyin.blog.model.mapper.AuditSettingJdbcMapper
 
 @CacheableRepository

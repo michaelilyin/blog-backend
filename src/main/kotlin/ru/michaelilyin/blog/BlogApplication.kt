@@ -10,7 +10,7 @@ import ru.michaelilyin.blog.config.SecurityConfig
 
 @Import(SecurityConfig::class)
 @SpringBootApplication
-@PropertySource("properties.properties")
+@PropertySource("classpath:properties.properties")
 class BlogApplication {
 
 }
