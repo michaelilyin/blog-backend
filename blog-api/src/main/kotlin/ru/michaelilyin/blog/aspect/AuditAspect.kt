@@ -32,7 +32,7 @@ class AuditAspect @Autowired() constructor(
         }
     }
 
-    @Pointcut("@annotation(ru.michaelilyin.blog.annotations.audit.Audit) && execution(* *(..))")
+    @Pointcut("@annotation(Audit) && execution(* *(..))")
     fun annotationPointcut() {}
 
     @Around("annotationPointcut()")

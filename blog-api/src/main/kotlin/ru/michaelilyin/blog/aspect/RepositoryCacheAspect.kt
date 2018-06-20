@@ -21,7 +21,7 @@ class RepositoryCacheAspect {
 
     private val repositories = mutableMapOf<Class<*>, MutableMap<Method, MutableMap<Number, Any>>>()
 
-    @Pointcut("within(@ru.michaelilyin.blog.annotations.cache.repository.CacheableRepository *)")
+    @Pointcut("within(@CacheableRepository *)")
     fun cacheableBeanPointcut() {}
 
     @Pointcut("execution(public * *.get*(..))")
@@ -30,7 +30,7 @@ class RepositoryCacheAspect {
     @Pointcut("cacheableBeanPointcut() && publicGetMethod()")
     fun cacheableGetPointcut() {}
 
-    @Pointcut("@annotation(ru.michaelilyin.blog.annotations.cache.repository.InvalidateCache) && execution(public * *(..))")
+    @Pointcut("@annotation(InvalidateCache) && execution(public * *(..))")
     fun publicInvalidatePointcut() {}
 
     @Around("cacheableGetPointcut()")
