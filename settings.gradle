@@ -1,4 +1,6 @@
 rootProject.name = 'blog-backend'
-include 'auth-server'
-include 'blog-api'
+
+include ':gateway'
+include ':services:auth-service'
+include ':services:blog-service'
 
