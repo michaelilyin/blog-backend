@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: config-service
+  rabbitmq:
+    addresses: rabbitmq:5672
+  security:
+    user:
+      name: blog
+      password: blog
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/michaelilyin/blog-config.git
+          clone-on-start: true
+
+server:
+  port: 8081
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    leaseRenewalIntervalInSeconds: 10
+    statusPageUrlPath: /info
+    healthCheckUrlPath: /health
+  client:
+    service-url:
+      defaultZone: http://blog:blog@blog-registry:8761/eureka/
