@@ -2,11 +2,11 @@ spring:
   application:
     name: config-service
   rabbitmq:
-    addresses: rabbitmq:5672
-  security:
-    user:
-      name: blog
-      password: blog
+    addresses: localhost:5672
+#  security:
+#    user:
+#      name: blog
+#      password: blog
   cloud:
     config:
       server:
@@ -15,7 +15,7 @@ spring:
           clone-on-start: true
 
 server:
-  port: 8081
+  port: 8888
 
 eureka:
   instance:
@@ -25,4 +25,4 @@ eureka:
     healthCheckUrlPath: /health
   client:
     service-url:
-      defaultZone: http://blog:blog@blog-registry:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/

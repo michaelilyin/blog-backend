@@ -4,5 +4,6 @@ include ':gateway'
 include ':services:config-service'
 include ':services:registry-service'
 include ':services:auth-service'
+include ':services:tech-service'
 include ':services:blog-service'
 
