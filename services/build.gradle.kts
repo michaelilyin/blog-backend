@@ -6,6 +6,7 @@ import java.util.*
 subprojects {
 
   apply {
+    plugin("java")
     plugin("kotlin")
     plugin("kotlin-spring")
     plugin("kotlin-kapt")
