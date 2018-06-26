@@ -1,0 +1,14 @@
+type StatusInfo {
+  version: String!
+  buildTime: String!
+  javaVersion: String!
+  uptime: Long!
+}
+
+type Query {
+  status: StatusInfo!
+}
+
+schema {
+    query: Query
+}
