@@ -6,7 +6,7 @@ import {graphiqlExpress, graphqlExpress} from "apollo-server-express";
 import {GatewaySchemaBuilder} from './gateway-schema-builder';
 import Eureka from 'eureka-client';
 
-const PORT = 8080;
+const PORT = process.env.PORT;
 
 (async () => {
   console.info(`Starting gateway on ${PORT}`);
@@ -17,10 +17,10 @@ const PORT = 8080;
     instance: {
       app: 'gateway-service',
       port: {
-        '$': 8080,
+        '$': process.env.PORT,
         '@enabled': 'true',
       },
-      hostName: 'localhost',
+      hostName: 'gateway-service',
       ipAddr: '127.0.0.1',
       vipAddress: 'jq.test.something.com',
       dataCenterInfo: {
@@ -30,7 +30,8 @@ const PORT = 8080;
     },
     eureka: {
       serviceUrl: [
-        'http://localhost:8761/eureka/apps/'
+      //  http://localhost:8761/eureka/apps/
+        process.env.EUREKA_URL
       ]
     },
   });
@@ -43,8 +44,7 @@ const PORT = 8080;
     app.use("/graphiql", graphiqlExpress({endpointURL: '/graphql'}));
 
     app.listen(PORT, () => {
-      console.log(`Schema Stitcher  running on ${PORT}`);
-      console.log(`Schema Stitcher  GraphiQL http://localhost:${PORT}/graphiql`);
+      console.log(`Gateway running on ${PORT}`);
     });
   });
 

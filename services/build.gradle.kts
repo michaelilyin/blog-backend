@@ -1,7 +1,9 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.text.SimpleDateFormat
 import java.util.*
+import com.palantir.gradle.docker.DockerExtension
 
 subprojects {
 
@@ -12,6 +14,7 @@ subprojects {
     plugin("kotlin-kapt")
     plugin("org.springframework.boot")
     plugin("io.spring.dependency-management")
+    plugin("com.palantir.docker")
   }
 
   repositories {
@@ -32,6 +35,19 @@ subprojects {
       ))
     )
     filter(args, ReplaceTokens::class.java)
+  }
+
+  configure<DockerExtension> {
+    val build by tasks
+    dependsOn(build)
+
+    val bootJar: BootJar by tasks
+
+    pull(false)
+    files(bootJar.archivePath)
+    name = "${project.group}/${bootJar.baseName}"
+    buildArgs(mapOf(Pair("JAR_FILE", bootJar.archiveName)))
+    tags("latest", bootJar.version)
   }
 }
 

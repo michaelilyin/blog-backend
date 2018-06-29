@@ -9,11 +9,13 @@ buildscript {
     mavenCentral()
     maven { setUrl("https://repo.spring.io/snapshot") }
     maven { setUrl("https://repo.spring.io/milestone") }
+    maven { setUrl("https://plugins.gradle.org/m2") }
   }
   dependencies {
     classpath(kotlin("gradle-plugin", kotlinVersion))
     classpath(kotlin("allopen", kotlinVersion))
     classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2")
   }
 }
 

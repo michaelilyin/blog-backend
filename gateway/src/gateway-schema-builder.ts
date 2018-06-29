@@ -19,8 +19,8 @@ export class GatewaySchemaBuilder {
   public async build(): Promise<GraphQLSchema> {
     const ownSchema = this.createOwnSchema();
 
-    let authSchema = await this.createRemoteSchema('auth-service');
-    authSchema = this.patchSchema(authSchema, 'AuthService');
+    // let authSchema = await this.createRemoteSchema('auth-service');
+    // authSchema = this.patchSchema(authSchema, 'AuthService');
 
     let techSchema = await this.createRemoteSchema('tech-service');
     techSchema = this.patchSchema(techSchema, 'TechService');
@@ -29,17 +29,27 @@ export class GatewaySchemaBuilder {
     return mergeSchemas({
       schemas: [
         ownSchema,
-        authSchema,
+        // authSchema,
         techSchema
       ]
     });
   }
 
-  private async createRemoteSchema(service: string): Promise<GraphQLSchema> {
+  private async createRemoteSchema(service: string, iteration?: number): Promise<GraphQLSchema> {
+    console.info('Fetch service', service, 'iteration', iteration);
     const services = this.eureka.getInstancesByAppId(service);
     if (!services.length) {
       console.warn(`Service ${services} is undefined`);
-      return Promise.reject();
+      if (iteration && iteration > 20) {
+        return Promise.reject();
+      }
+      return new Promise<GraphQLSchema>(((resolve, reject) => {
+        const timeout = iteration ? 1000 * iteration : 1000;
+        console.info('Wait for service startup', timeout);
+        setTimeout(() => {
+          this.createRemoteSchema(service, iteration ? iteration + 1 : 1).then(resolve).catch(reject)
+        }, timeout);
+      }));
     }
 
     const ipAddr = services[0].ipAddr;

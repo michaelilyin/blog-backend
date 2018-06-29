@@ -1,5 +1,7 @@
 rootProject.name = 'blog-backend'
 
+include ':tools:starters:graphql-starter'
+
 include ':gateway'
 include ':services:config-service'
 include ':services:registry-service'
