@@ -1,7 +1,12 @@
+scalar DateTime
+
 type StatusInfo {
   version: String!
   buildTime: String!
   javaVersion: String!
+  springVersion: String!
+  springBootVersion: String!
+  startTime: DateTime!
   uptime: Long!
 }
 
@@ -10,5 +15,5 @@ type Query {
 }
 
 schema {
-    query: Query
+  query: Query
 }

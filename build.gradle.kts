@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 buildscript {
-  val kotlinVersion = "1.2.50"
+  val kotlinVersion = "1.2.31"
   val springBootVersion = "2.0.3.RELEASE"
 
   repositories {

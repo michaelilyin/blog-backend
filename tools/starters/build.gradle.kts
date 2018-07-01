@@ -18,7 +18,13 @@ subprojects {
 
   tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs = kotlin.collections.listOf("-Xjsr305=strict")
+    kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
+  }
+
+  tasks.withType<Jar> {
+    baseName = project.name
+    version = "${project.version}"
+    enabled = true
   }
 
 }

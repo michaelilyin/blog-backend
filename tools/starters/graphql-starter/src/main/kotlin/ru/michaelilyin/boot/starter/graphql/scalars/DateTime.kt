@@ -1,4 +1,4 @@
-package ru.michaelilyin.blog.graphql.scalars
+package ru.michaelilyin.boot.starter.graphql.scalars
 
 import graphql.language.StringValue
 import java.time.LocalDateTime

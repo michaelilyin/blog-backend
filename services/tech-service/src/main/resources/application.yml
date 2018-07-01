@@ -8,7 +8,12 @@ eureka:
   instance:
     leaseRenewalIntervalInSeconds: 10
 
-#logging:
-#  level:
+logging:
+  level:
 #    com.netflix: DEBUG
 #    org.springframework: DEBUG
+    org.springframework: INFO
+
+michaelilyin:
+  version: @project.version@
+  build-time: @project.build.time@

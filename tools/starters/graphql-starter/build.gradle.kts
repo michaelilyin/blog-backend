@@ -12,4 +12,5 @@ dependencies {
   compile("com.graphql-java:graphiql-spring-boot-starter:$graphqlStarterVersion")
   compile("com.graphql-java:graphql-spring-boot-starter:$graphqlStarterVersion")
   compile("com.graphql-java:graphql-java-tools:$graphqlVersion")
+  compile("org.springframework.boot:spring-boot-configuration-processor")
 }
