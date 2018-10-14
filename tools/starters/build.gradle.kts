@@ -1,13 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 subprojects {
-
   apply {
     plugin("java")
     plugin("kotlin")
     plugin("kotlin-spring")
     plugin("kotlin-kapt")
-    plugin("org.springframework.boot")
     plugin("io.spring.dependency-management")
   }
 
@@ -26,5 +24,4 @@ subprojects {
     version = "${project.version}"
     enabled = true
   }
-
 }

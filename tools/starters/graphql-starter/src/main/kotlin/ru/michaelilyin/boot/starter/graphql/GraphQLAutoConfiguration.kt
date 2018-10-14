@@ -1,25 +1,16 @@
 package ru.michaelilyin.boot.starter.graphql
 
-import com.coxautodev.graphql.tools.GraphQLQueryResolver
 import com.oembedler.moon.graphql.boot.GraphQLJavaToolsAutoConfiguration
 import com.oembedler.moon.graphql.boot.GraphQLWebAutoConfiguration
 import graphql.ExceptionWhileDataFetching
-import graphql.GraphQL
 import graphql.GraphQLError
 import graphql.execution.instrumentation.Instrumentation
 import graphql.execution.preparsed.PreparsedDocumentProvider
 import graphql.servlet.*
 import mu.KLogging
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage
 import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration

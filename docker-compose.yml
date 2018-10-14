@@ -1,32 +1,5 @@
 version: '3'
 services:
-  registry-service:
-    image: ru.michaelilyin/registry-service:latest
-    ports:
-      - "8761:8761"
-
-  tech-service:
-    image: ru.michaelilyin/tech-service:latest
-    ports:
-      - "8081:8081"
-    links:
-      - registry-service
-    depends_on:
-      - registry-service
-    environment:
-      eureka.client.service-url.defaultZone: http://registry-service:8761/eureka/
-
-#  gateway:
-#    image: ru.michaelilyin/gateway:latest
-#    ports:
-#      - "8080:8080"
-#    links:
-#      - registry-service
-#    depends_on:
-#      - registry-service
-#      - tech-service
-#    environment:
-#      EUREKA_URL: http://registry-service:8761/eureka/apps/
 #  rabbitmq:
 #    image: rabbitmq:3-management
 #    ports:
@@ -48,34 +21,11 @@ services:
 #    ports:
 #       - "8081:8081"
 
-#  keycloak:
-#    build:
-#      context: ./keycloak
-#    environment:
-#      KEYCLOAK_USER: demo
-#      KEYCLOAK_PASSWORD: demo
-#      PORT: 8082
-#      POSTGRES_USER: demo
-#      POSTGRES_PASSWORD: demo
-#      POSTGRES_ADDR: postgres
-#      POSTGRES_PORT_5432_TCP_ADDR: postgres
-#      POSTGRES_PORT_5432_TCP_PORT: 5432
-#      POSTGRES_PORT: 5432
-#      POSTGRES_DATABASE: blog
-#    ports:
-#      - "8082:8082"
-#    links:
-#      - postgres
-#    depends_on:
-#      - postgres
-
-#  postgres:
-#    build:
-#      context: ../blog-back/postgres
-#    environment:
-#      POSTGRES_USER: demo
-#      POSTGRES_PASSWORD: demo
-#    ports:
-#      - "5432:5432"
-#    volumes:
-#      - /home/ilyin/personal/blog_pg:/var/lib/postgresql/data
+  postgres:
+    build:
+      context: ./postgres
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+    ports:
+      - "5432:5432"

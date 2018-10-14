@@ -1,0 +1,26 @@
+enum InfoType {
+  TEXT, MARKDOWN
+}
+
+type CommonRecord {
+  key: String!
+  type: InfoType!
+  content: String!
+}
+
+input CommonRecordInput {
+  key: String!
+  type: InfoType!
+  content: String!
+}
+
+type CommonInfo {
+  applicationName: CommonRecord!
+  primaryTitle: CommonRecord!
+}
+
+extend type Query {
+  welcomeServiceStatus: StatusInfo!
+  commonInfo: CommonInfo!
+  updateCommonInfo(records: [CommonRecordInput!]!): [CommonRecord!]!
+}

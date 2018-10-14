@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+#logging:
+#  level:
+#    com.netflix: DEBUG
+#    org.springframework: DEBUG
+#    org.springframework: INFO
+
+spring:
+  datasource:
+    url: jdbc:postgresql://192.168.99.100:5432/blog
+    username: demo
+    password: demo
+  datasource-tech:
+    url: jdbc:postgresql://192.168.99.100:5432/blog?currentSchema=tech
+    username: demo
+    password: demo
+  datasource-welcome:
+    url: jdbc:postgresql://192.168.99.100:5432/blog?currentSchema=welcome
+    username: demo
+    password: demo
+  jpa:
+    properties:
+      hibernate.temp.use_jdbc_metadata_defaults: false

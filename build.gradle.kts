@@ -3,7 +3,7 @@ import java.util.*
 
 buildscript {
   val kotlinVersion = "1.2.31"
-  val springBootVersion = "2.0.3.RELEASE"
+  val springBootVersion = "2.0.5.RELEASE"
 
   repositories {
     mavenCentral()
@@ -15,7 +15,7 @@ buildscript {
     classpath(kotlin("gradle-plugin", kotlinVersion))
     classpath(kotlin("allopen", kotlinVersion))
     classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
-    classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2")
+//    classpath("gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2")
   }
 }
 
@@ -24,7 +24,8 @@ allprojects {
   version = "0.0.1-SNAPSHOT"
 
   extra["kotlinVersion"] = "1.2.50"
-  extra["springBootVersion"] = "2.0.3.RELEASE"
+  extra["springVersion"] = "5.0.9.RELEASE"
+  extra["springBootVersion"] = "2.0.5.RELEASE"
   extra["springCloudVersion"] = "Finchley.RELEASE"
   extra["springEurekaVersion"] = "1.4.4.RELEASE"
   extra["liquibaseVersion"] = "3.5.5"
@@ -32,6 +33,8 @@ allprojects {
   extra["graphqlStarterVersion"] = "4.0.0.M1"
   extra["kotlinLoggingVersion"] = "1.4.9"
   extra["springSecurityOAuthVersion"] = "2.3.2.RELEASE"
+  extra["jodaTimeVersion"] = "2.10"
+  extra["embeddedPostgresVersion"] = "2.9"
 
   repositories {
     mavenLocal()
@@ -41,7 +44,6 @@ allprojects {
   apply {
     plugin("eclipse")
     plugin("idea")
-
   }
 }
 

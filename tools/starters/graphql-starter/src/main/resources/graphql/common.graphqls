@@ -1,0 +1,12 @@
+scalar DateTime
+
+type StatusInfo {
+  name: String!
+  version: String!
+  buildTime: DateTime!
+  javaVersion: String!
+  startTime: DateTime!
+  uptime: Long!
+  springVersion: String!
+  springBootVersion: String!
+}

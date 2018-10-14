@@ -1,0 +1,7 @@
+type Query {
+  compositeServiceStatus: StatusInfo!
+}
+
+schema {
+  query: Query
+}
