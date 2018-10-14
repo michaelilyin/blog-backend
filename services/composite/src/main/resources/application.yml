@@ -6,20 +6,20 @@ server:
 #    com.netflix: DEBUG
 #    org.springframework: DEBUG
 #    org.springframework: INFO
-
+#192.168.99.100
 spring:
   datasource:
-    url: jdbc:postgresql://192.168.99.100:5432/blog
-    username: demo
-    password: demo
+    url: ${JDBC_DATABASE_URL}
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
   datasource-tech:
-    url: jdbc:postgresql://192.168.99.100:5432/blog?currentSchema=tech
-    username: demo
-    password: demo
+    url: ${JDBC_DATABASE_URL}?currentSchema=tech
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
   datasource-welcome:
-    url: jdbc:postgresql://192.168.99.100:5432/blog?currentSchema=welcome
-    username: demo
-    password: demo
+    url: ${JDBC_DATABASE_URL}?currentSchema=welcome
+    username: ${JDBC_DATABASE_USERNAME}
+    password: ${JDBC_DATABASE_PASSWORD}
   jpa:
     properties:
       hibernate.temp.use_jdbc_metadata_defaults: false

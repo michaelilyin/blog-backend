@@ -56,8 +56,8 @@ class TechPersistenceConfig {
   }
 
   @Bean
-  @DependsOn("liquibase-master")
-  fun liquibase(@TechDataSource ds: DataSource): SpringLiquibase {
+  @DependsOn("liquibase")
+  fun techLiquibase(@TechDataSource ds: DataSource): SpringLiquibase {
     val liquibase = SpringLiquibase()
     liquibase.dataSource = ds
     liquibase.changeLog = "classpath:/db/changelog/tech/db.changelog-tech.yaml"

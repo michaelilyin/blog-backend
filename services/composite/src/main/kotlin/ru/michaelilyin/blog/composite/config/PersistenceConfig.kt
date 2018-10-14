@@ -38,7 +38,7 @@ class PersistenceConfig {
     return NamedParameterJdbcTemplate(ds)
   }
 
-  @Bean(name = ["liquibase-master"])
+  @Bean
   @Primary
   fun liquibase(ds: DataSource): SpringLiquibase {
     val liquibase = SpringLiquibase()

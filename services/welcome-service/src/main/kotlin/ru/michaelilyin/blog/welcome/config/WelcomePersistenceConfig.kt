@@ -2,6 +2,7 @@ package ru.michaelilyin.blog.welcome.config
 
 import liquibase.integration.spring.SpringLiquibase
 import mu.KLogging
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -47,14 +48,14 @@ class WelcomePersistenceConfig {
   }
 
   @Bean
-  @WelcomeTransactionManager
+  @Qualifier("welcomeTX")
   fun welcomeTransactionManager(@WelcomeDataSource ds: DataSource): PlatformTransactionManager {
     return DataSourceTransactionManager(ds)
   }
 
   @Bean
-  @DependsOn("liquibase-master")
-  fun liquibase(@WelcomeDataSource ds: DataSource): SpringLiquibase {
+  @DependsOn("liquibase")
+  fun welcomeLiquibase(@WelcomeDataSource ds: DataSource): SpringLiquibase {
     val liquibase = SpringLiquibase()
     liquibase.dataSource = ds
     liquibase.changeLog = "classpath:/db/changelog/welcome/db.changelog-welcome.yaml"

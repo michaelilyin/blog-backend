@@ -14,7 +14,7 @@ class CommonInfoService @Autowired constructor(
     return commonInfoRepository.find(key)
   }
 
-  @Transactional
+  @Transactional("welcomeTX")
   fun update(record: CommonRecord): CommonRecord {
     commonInfoRepository.update(record)
     return record
